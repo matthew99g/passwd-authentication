@@ -20,6 +20,7 @@ main(const int argc, const char *argv[])
     ssize_t len;
     long lnmax;
 
+    // Check for max login string length
     lnmax = sysconf(_SC_LOGIN_NAME_MAX);
     if (lnmax == -1)
         lnmax = 256;
@@ -33,10 +34,12 @@ main(const int argc, const char *argv[])
     if (fgets(username, lnmax, stdin) == NULL)
         fatal("Invalid Input");
 
+    // Replace \n with \0
     len = strlen(username);
     if (username[len -1] == '\n')
         username[len -1] = '\0';
 
+    // Get PWD and Shadow PWD
     pwd = getpwnam(username);
     if (pwd == NULL)
         fatal("Couldn't get password record");
@@ -46,17 +49,19 @@ main(const int argc, const char *argv[])
 
     freeMemoryHeapP(username);
 
+    // If shadow, the use shadow encrpytion
     if(spwd != NULL)
         pwd->pw_passwd = spwd->sp_pwdp;
 
     password = getpass("Password: ");
 
+    // Create encrpytion from password input then erase password from memory
     encrpyted = crypt(password, pwd->pw_passwd);
     for (p = password; *p != '\0'; )
         *++p = '\0';
 
     if(encrpyted == NULL)
-        errnoExit("crypt, are you root?\n");
+        errnoExit("crypt: are you root?\n");
 
     authOk = strcmp(encrpyted, pwd->pw_passwd) == 0;
     if(!authOk) 
