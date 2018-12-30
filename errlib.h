@@ -82,6 +82,7 @@ fatal(const char *fmt)
     terminate(TRUE);
 }
 
+#ifdef _LIB_ERROR_CONTROL
 static void NORETURN
 outputError(Boolean useErr, Boolean flushStdout,
         const char *fmt, __STD_ARGS)
@@ -103,6 +104,7 @@ outputError(Boolean useErr, Boolean flushStdout,
     // not supposed to reach here
     terminate(FALSE);
 }
+#endif
 
 static void NORETURN
 terminate(Boolean useExit3)

@@ -13,6 +13,9 @@
 int
 main(const int argc, const char *argv[])
 {
+    if(argc != 1 || argv[1] != NULL)
+        fatal("This program takes 0 command-line arguments");
+
     char *username, *password, *encrpyted, *p;
     struct passwd *pwd;
     struct spwd *spwd;
@@ -53,6 +56,7 @@ main(const int argc, const char *argv[])
     if(spwd != NULL)
         pwd->pw_passwd = spwd->sp_pwdp;
 
+    fflush(stdout);
     password = getpass("Password: ");
 
     // Create encrpytion from password input then erase password from memory

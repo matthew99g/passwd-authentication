@@ -12,13 +12,10 @@
 #include <errno.h>
 #include <elf.h>
 
-//#define MAX_ENAME 132
+/* Define to use outputError() */
+//#define _LIB_ERROR_CONTROL
 
 #define __STD_ARGS ...
-
-#ifndef BUF_SIZE
-#define BUF_SIZE 1024
-#endif
 
 #ifdef __GNUC__
 #define NORETURN __attribute__ ((__noreturn__))
@@ -47,8 +44,8 @@
 #define NORETURN
 #endif
 
-#ifndef _BUF_SIZE
-#define _BUF_SIZE 512
+#ifndef BUF_SIZE
+#define BUF_SIZE 1024
 #endif
 
 void NORETURN
@@ -69,8 +66,14 @@ errExit(const char *format, __STD_ARGS);
 void NORETURN
 fatal(const char *fmt);
 
+#ifdef _LIB_ERROR_CONTROL
+#ifndef _BUF_SIZE
+#define _BUF_SIZE 512
+#endif
+
 static void NORETURN
 outputError(Boolean useErr, Boolean flushStdout,
         const char *fmt, __STD_ARGS);
+#endif
 
 #endif
